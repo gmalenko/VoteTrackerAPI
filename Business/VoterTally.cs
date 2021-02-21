@@ -87,6 +87,7 @@ namespace VoteTrackerAPI.Business
                 };
                 voterSummaryList.Add(tempVoterSummary);
             }
+            voterSummaryList = voterSummaryList.OrderByDescending(x => x.Totals).ToList();
 
             return voterSummaryList;
         }

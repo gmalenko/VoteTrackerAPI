@@ -40,8 +40,7 @@ namespace VoteTrackerAPI.Controllers
         public async Task<IActionResult> GetVoterTallies()
         {
             try
-            {
-                await voterTally.GetVoterSummaries();
+            {                
                 return Json(await voterTally.GetVoterTallies());
             }
             catch (Exception e)
