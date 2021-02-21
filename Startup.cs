@@ -26,23 +26,23 @@ namespace VoteTrackerAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(option => option.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Latest);
-            services.AddControllers();
-            services.AddControllersWithViews().AddNewtonsoftJson(options =>options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
 
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
+                options.AddDefaultPolicy(
                     builder =>
                     {
                         builder
-                        .WithOrigins("https://*.kiddiesearch.com", "http://localhost:4200").SetIsOriginAllowedToAllowWildcardSubdomains()
+                        .WithOrigins("http://localhost:4200", "https://localhost:4200", "http://*.trueandholyway.org", "https://*.trueandholyway.org").SetIsOriginAllowedToAllowWildcardSubdomains()
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials();
                     });
             });
+            services.AddMvc(option => option.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddControllers();
+            services.AddControllersWithViews().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
             services.AddCustomService();
             services.AddSwaggerGen();
         }
@@ -50,11 +50,13 @@ namespace VoteTrackerAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //app.UseCors(builder => builder.WithOrigins("http://localhost:4200"));
+            app.UseCors();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseCors("AllowAll");
+
 
             app.UseHttpsRedirection();
 
