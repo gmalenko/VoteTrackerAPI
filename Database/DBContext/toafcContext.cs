@@ -25,6 +25,7 @@ namespace VoteTrackerAPI.Database.DBContext
         public virtual DbSet<VoteRegistration> VoteRegistrations { get; set; }
         public virtual DbSet<VoteSelfRegistration> VoteSelfRegistrations { get; set; }
         public virtual DbSet<VoterTally> VoterTallies { get; set; }
+        public virtual DbSet<VotingEnabled> VotingEnableds { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -193,6 +194,16 @@ namespace VoteTrackerAPI.Database.DBContext
                 entity.Property(e => e.VoteCandidateId).HasColumnName("vote_candidate_id");
 
                 entity.Property(e => e.VoteSelfRegistrationId).HasColumnName("vote_self_registration_id");
+            });
+
+            modelBuilder.Entity<VotingEnabled>(entity =>
+            {
+                entity.HasKey(e => e.Status)
+                    .HasName("voting_enabled_pkey");
+
+                entity.ToTable("voting_enabled");
+
+                entity.Property(e => e.Status).HasColumnName("status");
             });
 
             OnModelCreatingPartial(modelBuilder);
