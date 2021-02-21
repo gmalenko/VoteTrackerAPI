@@ -24,6 +24,7 @@ namespace VoteTrackerAPI.Database.DBContext
         public virtual DbSet<VotePeriod> VotePeriods { get; set; }
         public virtual DbSet<VoteRegistration> VoteRegistrations { get; set; }
         public virtual DbSet<VoteSelfRegistration> VoteSelfRegistrations { get; set; }
+        public virtual DbSet<VoterTally> VoterTallies { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -175,6 +176,23 @@ namespace VoteTrackerAPI.Database.DBContext
                     .WithMany(p => p.VoteSelfRegistrations)
                     .HasForeignKey(d => d.VotePeriod)
                     .HasConstraintName("voteselfregistration_voteperiod");
+            });
+
+            modelBuilder.Entity<VoterTally>(entity =>
+            {
+                entity.ToTable("voter_tally");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .HasDefaultValueSql("uuid_generate_v4()");
+
+                entity.Property(e => e.Createdon).HasColumnName("createdon");
+
+                entity.Property(e => e.IsDeleted).HasColumnName("is_deleted");
+
+                entity.Property(e => e.VoteCandidateId).HasColumnName("vote_candidate_id");
+
+                entity.Property(e => e.VoteSelfRegistrationId).HasColumnName("vote_self_registration_id");
             });
 
             OnModelCreatingPartial(modelBuilder);
