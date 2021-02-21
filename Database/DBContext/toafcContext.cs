@@ -159,6 +159,8 @@ namespace VoteTrackerAPI.Database.DBContext
 
                 entity.Property(e => e.Createdon).HasColumnName("createdon");
 
+                entity.Property(e => e.Email).HasColumnName("email");
+
                 entity.Property(e => e.Firstname).HasColumnName("firstname");
 
                 entity.Property(e => e.Lastname).HasColumnName("lastname");

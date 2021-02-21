@@ -15,6 +15,7 @@ namespace VoteTrackerAPI.Models.Database
         public Guid? Createdbyuser { get; set; }
         public DateTime? Modifiedon { get; set; }
         public Guid? Modifiedbyuser { get; set; }
+        public string Email { get; set; }
 
         public virtual VotePeriod VotePeriodNavigation { get; set; }
     }
