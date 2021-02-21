@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using VoteTrackerAPI.Services;
 
 namespace VoteTrackerAPI
 {
@@ -27,6 +28,8 @@ namespace VoteTrackerAPI
         {
             services.AddMvc(option => option.EnableEndpointRouting = false).SetCompatibilityVersion(CompatibilityVersion.Latest);
             services.AddControllers();
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 
             services.AddCors(options =>
             {
@@ -40,7 +43,7 @@ namespace VoteTrackerAPI
                         .AllowCredentials();
                     });
             });
-
+            services.AddCustomService();
             services.AddSwaggerGen();
         }
 
