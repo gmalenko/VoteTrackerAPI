@@ -1,9 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VoteTrackerAPI.Database;
+using VoteTrackerAPI.Models;
 using VoteTrackerAPI.Services.Cache;
 
 namespace VoteTrackerAPI.Business
@@ -64,8 +66,29 @@ namespace VoteTrackerAPI.Business
                 VoteSelfRegistrationId = voterTalley.VoteSelfRegistration.Id
             };
             dbVoterTally = await voterTallyDB.InsertTally(dbVoterTally);
+            _cacheOperation.Delete(cacheKey);
             voterTalley.Id = dbVoterTally.Id;
             return voterTalley;
+        }
+
+        public async Task<List<VoterSummary>> GetVoterSummaries()
+        {
+            var voterTallies = await this.GetVoterTallies();
+            var voterSummaryList = new List<VoterSummary>();
+
+
+            var voterTalliesGroup = voterTallies.GroupBy(x => x.VoteCandidate.Id);
+            foreach (var group in voterTalliesGroup)
+            {
+                var tempVoterSummary = new VoterSummary()
+                {
+                    Totals = group.Count(),
+                    VoteCandidate = voterTallies.Where(x => x.VoteCandidate.Id == group.Key).FirstOrDefault().VoteCandidate
+                };
+                voterSummaryList.Add(tempVoterSummary);
+            }
+
+            return voterSummaryList;
         }
     }
 }

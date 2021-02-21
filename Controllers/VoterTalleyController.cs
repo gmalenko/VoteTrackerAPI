@@ -22,11 +22,26 @@ namespace VoteTrackerAPI.Controllers
         }
 
         [HttpGet]
+        [Route("GetVoteSummary")]
+        public async Task<IActionResult> GetVoteSummary()
+        {
+            try
+            {
+                return Json(await voterTally.GetVoterSummaries());
+            }
+            catch(Exception e)
+            {
+                return StatusCode(500, e);
+            }
+        }
+
+        [HttpGet]
         [ResponseType(typeof(IEnumerable<Models.VoterTalley>))]
         public async Task<IActionResult> GetVoterTallies()
         {
             try
             {
+                await voterTally.GetVoterSummaries();
                 return Json(await voterTally.GetVoterTallies());
             }
             catch (Exception e)
@@ -48,6 +63,8 @@ namespace VoteTrackerAPI.Controllers
                 return StatusCode(500, e);
             }
         }
+
+
 
     }
 }
